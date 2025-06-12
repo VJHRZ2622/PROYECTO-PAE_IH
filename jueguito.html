@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz de Reciclaje Electrónico</title>
+  <style>
+    body { font-family: Arial; background-color: orange; text-align: center; padding: 20px; }
+    .question { font-size: 1.2em; margin: 20px 0; }
+    button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+
+
+ 
+    /* Estilo del modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    .modal-content img {
+      width: 100px;
+      height: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+ <ul> 
+   <h1> <li><a href="presentacion.html">presentación</a></li></1>
+    <h1><li><a href="juego.html">juego</a></li></h1>
+  </ul>
+
+  <h1>Quiz: ¿Sabes reciclar basura electrónica?</h1>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <div id="answers"></div>
+  </div>
+
+  <!-- Modal -->
+  <div id="finalModal" class="modal">
+    <div class="modal-content" id="modalContent">
+      <!-- Se inserta contenido dinámicamente -->
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "¿Dónde se debe tirar un teléfono viejo?",
+        options: ["Contenedor orgánico", "Punto limpio/electrónico", "Contenedor de papel"],
+        correct: 1
+      },
+      {
+        question: "¿Qué es basura electrónica?",
+        options: ["Restos de comida", "Cartón", "Computadoras viejas"],
+        correct: 2
+      },
+      {
+        question: "¿Por qué reciclar electrónicos?",
+        options: ["Por su color", "Contienen materiales contaminantes", "Son fáciles de romper"],
+        correct: 1
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[current];
+      document.getElementById('question').textContent = q.question;
+      const answers = document.getElementById('answers');
+      answers.innerHTML = '';
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (i === q.correct) score++;
+          current++;
+          if (current < questions.length) {
+            loadQuestion();
+          } else {
+            showResult();
+          }
+        };
+        answers.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      const modal = document.getElementById('finalModal');
+      const modalContent = document.getElementById('modalContent');
+      document.getElementById('quiz').style.display = 'none';
+
+      const resultHTML = score === questions.length
+        ? `
+          <h2>¡Felicitaciones!</h2>
+          <p>Has respondido todo correctamente.</p>
+          <img src="ganaste.jpeg" alt="Ganaste">
+        `
+        : `
+          <h2>¡Perdiste!</h2>
+          <p>Tu puntuación: ${score} de ${questions.length}</p>
+          <img src="falla.jpg" alt="Perdiste">
+        `;
+
+      modalContent.innerHTML = resultHTML + `
+        <br>
+        <button onclick="reiniciarQuiz()">Reiniciar Quiz</button>
+      `;
+
+      modal.style.display = 'block';
+    }
+
+    function reiniciarQuiz() {
+      score = 0;
+      current = 0;
+      document.getElementById('quiz').style.display = 'block';
+      document.getElementById('finalModal').style.display = 'none';
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+
+ 
+
+  <video width="640" height="360" controls>
+    <source src="v2.mp4" type="video/mp4">
+  </video>
+</body>
+</html>

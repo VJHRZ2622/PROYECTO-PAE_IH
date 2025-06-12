@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clasifica la basura electrónica</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: pink;
+    }
+    h1 {
+      color: green;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li a {
+      font-size: 20px; /* Hipervínculos más grandes */
+      text-decoration: none;
+      color: blue;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .item, .bin {
+      width: 120px;
+      height: 120px;
+      border: 2px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      cursor: grab;
+      flex-direction: column;
+    }
+    .bin {
+      background: #d4ffd4;
+      min-height: 150px;
+      padding: 10px;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      margin-top: 5px;
+    }
+    .bins {
+      display: flex;
+      justify-content: center;
+      gap: 100px;
+      margin-top: 40px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <ul> 
+    <li><a href="presentacion.html">Presentación</a></li>
+    <li><a href="jueguito.html">Jueguito</a></li>
+  </ul>
+
+  <h1>Clasifica la basura electrónica</h1>
+
+  <!-- Botón ahora directamente debajo del título -->
+  <button onclick="verificar()">Verificar</button>
+
+  <p>Arrastra los objetos a su contenedor correspondiente</p>
+
+  <div class="container">
+    <div id="laptop" class="item" draggable="true">
+      Laptop
+      <img src="laptop.jpeg" alt="Laptop">
+    </div>
+    <div id="phone" class="item" draggable="true">
+      Teléfono
+      <img src="telefono.jpeg" alt="Teléfono">
+    </div>
+    <div id="banana" class="item" draggable="true">
+      Banana
+      <img src="banana.jpeg" alt="Banana">
+    </div>
+  </div>
+
+  <div class="bins">
+    <div>
+      <h2>Contenedor Electrónico</h2>
+      <div id="electro-bin" class="bin"></div>
+    </div>
+    <div>
+      <h2>Contenedor Orgánico</h2>
+      <div id="organic-bin" class="bin"></div>
+    </div>
+  </div>
+
+  <!-- Video al final -->
+  <video width="940" height="260" controls>
+    <source src="v1.mp4" type="video/mp4">
+  </video>
+
+  <script>
+    const items = document.querySelectorAll('.item');
+    const electroBin = document.getElementById('electro-bin');
+    const organicBin = document.getElementById('organic-bin');
+
+    items.forEach(item => {
+      item.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', item.id);
+      });
+    });
+
+    function verificar() {
+      let electroItems = Array.from(electroBin.children).map(el => el.id);
+      let organicItems = Array.from(organicBin.children).map(el => el.id);
+
+      const correctoElectro = electroItems.includes('laptop') && electroItems.includes('phone');
+      const correctoOrganico = organicItems.includes('banana');
+
+      if (correctoElectro && correctoOrganico && electroItems.length === 2 && organicItems.length === 1) {
+        alert("¡Bien hecho!");
+      } else {
+        alert("Estuviste cerca :(");
+      }
+    }
+
+    [electroBin, organicBin].forEach(bin => {
+      bin.addEventListener('dragover', e => e.preventDefault());
+      bin.addEventListener('drop', e => {
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const item = document.getElementById(id);
+        bin.appendChild(item);
+      });
+    });
+  </script>
+
+</body>
+</html>
